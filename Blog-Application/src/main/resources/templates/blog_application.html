@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Blog Application</title>
+    <style>
+    
+   
+        /* Style for the "Post" button */
+        .post-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px 20px;
+            background-color: #007bff; /* Blue color, you can change this */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Style for the post form */
+        #postForm {
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: none; /* Initially hidden */
+            width: 300px;
+        }
+
+        #postForm label,
+        #postForm input,
+        #postForm textarea {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        #postForm input[type="submit"] {
+            width: auto;
+            cursor: pointer;
+        }
+
+        /* Style for displaying posts */
+        .post {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+
+        .post-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .post-content {
+            white-space: pre-wrap; /* Preserve newlines in content */
+        }
+
+        /* Style for the "Comment" button */
+        .comment-button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #28a745; /* Green color for the comment button */
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        /* Style for the comment form */
+        .comment-form {
+            display: none; /* Initially hidden */
+            margin-top: 10px;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .comment-form input[type="submit"] {
+            cursor: pointer;
+        }
+    
+    
+        /* Style for the "Post" button */
+        .post-button {
+            position: absolute;
+            top: 10px;
+            right: 100px;
+            padding: 10px 20px;
+            background-color: #007bff; /* Blue color, you can change this */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .log-out-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px 20px;
+            background-color: #e11f06; /* Blue color, you can change this */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .my-post-button {
+            position: absolute;
+            top: 10px;
+            right: 200px;
+            padding: 10px 20px;
+            background-color: #839084; /* Blue color, you can change this */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Style for the post form */
+        #postForm {
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: none; /* Initially hidden */
+            width: 300px;
+        }
+
+        #postForm label,
+        #postForm input,
+        #postForm textarea {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        #postForm input[type="submit"] {
+            width: auto;
+            cursor: pointer;
+        }
+
+        /* Style for displaying posts */
+        .post {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+
+        .post-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .post-content {
+            white-space: pre-wrap; /* Preserve newlines in content */
+        }
+
+        /* Style for the "Comment" button */
+        .comment-button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #28a745; /* Green color for the comment button */
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        /* Style for the comment form */
+        .comment-form {
+            display: none; /* Initially hidden */
+            margin-top: 10px;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .comment-form input[type="submit"] {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to the Blog Application</h1>
+    <p th:text="'Hello, ' + ${username}"></p>
+    <!-- Assuming 'username' is the attribute passed from the controller -->
+
+    <!-- "Post" button -->
+     <form action="/user/posts" method="get">
+     	<input type="hidden" id="userId" name="userId" th:value="${id}">
+        <input class="my-post-button" type="submit" value="My Blog">
+    </form>
+    
+    
+    <button class="post-button" onclick="showPostForm()" type="button">Blog</button>
+    <button class="log-out-button"  onclick="location.href='/home'">Log out</button>
+    
+    <!-- Form for posting data -->
+    <form id="postForm" action="/post" method="post">
+        <input type="hidden" id="id" name="id" th:value="${id}"> <!-- Ensure Thymeleaf expression is used -->
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
+        <label for="content">Content:</label>
+        <textarea id="content" name="content" rows="4" cols="50" required></textarea>
+        <input type="submit" value="Submit">
+    </form>
+
+    <!-- Display posts -->
+    <div th:each="post : ${posts}" class="post">
+        <div class="post-title" th:text="${post.title}"></div>
+        <div class="post-content" th:text="${post.content}"></div>
+        
+        <button class="comment-button" type="button">Like</button>
+
+
+<button class="comment-button" type="button" th:onclick="|showComments('${post.id}', '${id}')|">
+        See All Comments
+    </button>  
+    	 <button class="comment-button" type="button" onclick="showCommentForm(this)">Comment</button>
+      
+        
+
+        <!-- Comment form -->
+        <form class="comment-form" action="/comment" method="post">
+            <input type="hidden" name="postId" th:value="${post.id}">
+            
+            <textarea name="comment" rows="3" required></textarea>
+            <input type="hidden" id="userId" name="userId" th:value="${id}">
+            <input type="submit" value="Submit Comment">
+        </form>
+        <!-- Container for displaying comments -->
+        
+       		
+            <!-- Comments will be displayed here -->
+        
+    </div>
+
+    <!-- Script to handle button click -->
+    <script>
+        function showPostForm() {
+            document.getElementById('postForm').style.display = 'block';
+        }
+
+        function showCommentForm(button) {
+            const commentForm = button.nextElementSibling;
+            commentForm.style.display = 'block';
+        }
+        
+        function showComments(postId, userId) {
+    window.location.href = '/comment?postId=' + postId + '&userId=' + userId;
+}
+        
+        
+    </script>
+   
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Posts</title>
+    <!-- Add any additional CSS or meta tags here -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .post {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .post-form {
+    display: none;
+}
+        
+        h1 {
+            color: #333;
+        }
+        h2 {
+            color: #555;
+        }
+        p {
+            color: #777;
+        }
+        .no-posts {
+            color: #888;
+            text-align: center;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 th:text="${username} + ' Blogs'">User Posts</h1>
+        
+        <!-- Iterate over the list of posts and display them -->
+        <div th:if="${not #lists.isEmpty(posts)}">
+            <div th:each="post : ${posts}" class="post">
+                <h2 th:text="${post.title}">Post Title</h2>
+                <p th:text="${post.content}">Post Content</p>
+               
+				<button class="button" type="button" th:onclick="|showComments('${post.id}', '${userId}')|">
+				        See All Comments
+				    </button>
+                <button class="button" onclick="showPostForm()" type="button">Edit</button>
+                
+           <form id="postForm" class="post-form" action="/comments" method="post"> 
+          		 <label for="title">title:</label>
+			    <input type="hidden" id="postId" name="postId" th:value="${post.id}">
+			    <input type="hidden" id="userId" name="userId" th:value="${userId}">
+			    <input type="text" id="title" name="title" th:value="${post.title}" required>
+			    <label for="content">Content:</label>
+			    <textarea id="content" name="content" rows="4" cols="50" required th:text="${post.content}"></textarea>
+			    <button class="button" type="submit">Save</button>
+		</form>
+           
+                
+                
+                
+
+					<button class="button" type="button" th:onclick="|deleteBlog('${post.id}', '${userId}')|">
+        					Delete 
+    				</button> 
+    
+                
+                
+                <!-- Add any additional information you want to display for each post -->
+                <hr>
+            </div>
+        </div>
+        <div th:if="${#lists.isEmpty(posts)}" class="no-posts">
+            <p>No blogs found for this user.</p>
+        </div>
+        
+        <form class="comment-form" action="/blog" method="get">
+            <input type="hidden" name="id" th:value="${userId}">
+            <button class="button" type="submit">Go to Blog</button>
+        </form>
+    </div>
+    
+    <script>
+    
+    function showComments(postId, userId) {
+    window.location.href = '/comment?postId=' + postId + '&userId=' + userId;
+}
+    function showPostForm() {
+            document.getElementById('postForm').style.display = 'block';
+        }
+        
+        
+    
+    
+    function editBlog(postId, userId) {
+        
+        fetch(`/comment?postId=${postId}&userId=${userId}`, {
+            method: 'PUT'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to delete post');
+            }
+            // Redirect to a suitable page after deletion, for example, back to the blog page
+            window.location.href='/user/posts?userId='+ userId;
+             
+        })
+        .catch(error => {
+            console.error('Error deleting post:', error);
+            // Handle the error as needed
+        });
+    }
+    
+     function deleteBlog(postId, userId) {
+        
+        fetch(`/comment?postId=${postId}&userId=${userId}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to delete post');
+            }
+            // Redirect to a suitable page after deletion, for example, back to the blog page
+            window.location.href='/user/posts?userId='+ userId;
+             
+        })
+        .catch(error => {
+            console.error('Error deleting post:', error);
+            // Handle the error as needed
+        });
+    }
+</script>
+    
+</body>
+</html>

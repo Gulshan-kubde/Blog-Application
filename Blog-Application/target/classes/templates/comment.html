@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Comments</title>
+    <style>
+        /* Style for the container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Style for the post section */
+        .post {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Style for the post title */
+        .post-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333333;
+            margin-bottom: 10px;
+        }
+
+        /* Style for the post content */
+        .post-content {
+            font-size: 16px;
+            color: #666666;
+        }
+
+        /* Style for individual comments */
+        .comment {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+
+        /* Style for comment text */
+        .comment-text {
+            margin: 0;
+            color: #333;
+        }
+
+        /* Style for the back button */
+        .back-button {
+            margin-top: 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Post Section -->
+    <div class="post" th:if="${post.title}">
+        <div class="post-title" th:text="${post.title}"></div>
+        <div class="post-content" th:text="${post.content}"></div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="comment-container">
+        <div th:each="postcomment : ${comments}" class="comment">
+            <p class="comment-text" th:text="${postcomment.comment}"></p>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <form class="comment-form" action="/blog" method="get">
+        <input type="hidden" name="id" th:value="${userId}">
+        <button class="back-button" type="submit">Go to All Blog</button>
+    </form>
+</div>
+
+</body>
+</html>
